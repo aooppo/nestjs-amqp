@@ -2,12 +2,12 @@
 
 ## Installation
 
-    $ npm install @quickts/nestjs-amqp amqplib
+    $ npm install voox-nestjs-amqp amqplib
     $ npm install -D @types/amqplib
 
 ## Usage
 
-import { Publish, Consume, Publisher, AfterPublisherInit } from "@quickts/nestjs-redis";
+import { Publish, Consume, Publisher, AfterPublisherInit } from "voox-nestjs-amqp";
 
 ```ts
 @Injectable()
