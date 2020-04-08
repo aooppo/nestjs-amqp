@@ -1,6 +1,6 @@
 {
-    "name": "@quickts/nestjs-amqp",
-    "version": "1.0.7",
+    "name": "voox-nestjs-amqp",
+    "version": "1.0.8",
     "description": "",
     "main": "dist/index.js",
     "scripts": {
@@ -17,7 +17,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/quickts/nestjs-amqp.git"
+        "url": "git+https://github.com/aooppo/nestjs-amqp.git"
     },
     "keywords": [
         "quickts",
@@ -55,7 +55,7 @@
         "dist"
     ],
     "bugs": {
-        "url": "https://github.com/quickts/nestjs-amqp/issues"
+        "url": "https://github.com/aooppo/nestjs-amqp/issues"
     },
-    "homepage": "https://github.com/quickts/nestjs-amqp#readme"
+    "homepage": "https://github.com/aooppo/nestjs-amqp#readme"
 }

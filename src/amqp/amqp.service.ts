@@ -20,7 +20,7 @@ export class AmqpService implements OnModuleInit, OnModuleDestroy {
     constructor(
         private readonly scannerService: ScannerService, //
         @Inject(AMQP_OPTION) private readonly options: Options.Connect
-    ) {}
+    ) { }
 
     async onModuleInit() {
         this.logger.log("Initializing...");
@@ -75,8 +75,13 @@ export class AmqpService implements OnModuleInit, OnModuleDestroy {
             const exchangeMetadate = metadata.exchangeMetadate;
             const queueMetadate = metadata.queueMetadate;
             const patternsMetadate = metadata.patternsMetadate;
+            // console.log('consume metadata@>>', consumerMetadates);
+            const channelMetadata = metadata.channelMetadata;
             const decode = queueMetadate.decode || defaultDecode;
             const channel = await this.connection.createChannel();
+            if (channelMetadata && channelMetadata.prefetch && channelMetadata.prefetch > 0) {
+                channel.prefetch(channelMetadata.prefetch);
+            }
             await channel.assertExchange(exchangeMetadate.exchange, exchangeMetadate.type || "direct", exchangeMetadate.exchangeOptions);
             const queue = await channel.assertQueue(queueMetadate.queue, queueMetadate.queueOptions);
             if (exchangeMetadate.type != "fanout") {
