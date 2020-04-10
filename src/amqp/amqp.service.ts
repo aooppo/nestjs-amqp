@@ -1,7 +1,7 @@
 import { Injectable, Inject, Logger, OnModuleInit, OnModuleDestroy } from "@nestjs/common";
 import { ScannerService } from "@quickts/nestjs-scanner";
 import { connect, Connection, Options } from "amqplib";
-import { AMQP_OPTION, AMQP_CONSUMER_METADATA, AMQP_PUBLISHER_METADATA } from "./amqp.constants";
+import { AMQP_OPTION, AMQP_CONSUMER_METADATA, AMQP_PUBLISHER_METADATA, AMQP_CHANNEL_METADATA } from "./amqp.constants";
 
 function defaultEncode(msg: any) {
     return Buffer.from(JSON.stringify(msg));
@@ -36,6 +36,10 @@ export class AmqpService implements OnModuleInit, OnModuleDestroy {
         await this.scannerService.scanProviderPropertyMetadates(AMQP_PUBLISHER_METADATA, async (instance, propertyKey, metadata) => {
             publisherMetadates.push({ instance, propertyKey, metadata });
         });
+        const channelMetadates: any[] = [];
+        await this.scannerService.scanProviderPropertyMetadates(AMQP_CHANNEL_METADATA, async (instance, propertyKey, metadata) => {
+            channelMetadates.push({ instance, propertyKey, metadata });
+        });
         for (const { instance, propertyKey, metadata } of publisherMetadates) {
             const exchangeMetadate = metadata;
             const encode = exchangeMetadate.encode || defaultEncode;
@@ -65,6 +69,13 @@ export class AmqpService implements OnModuleInit, OnModuleDestroy {
             }
 
             this.logger.log(`[Publisher exchange:${exchangeMetadate.exchange}] initialized`);
+        }
+        for (const { instance, propertyKey, metadata } of channelMetadates) {
+            const exchangeMetadate = metadata;
+            const encode = exchangeMetadate.encode || defaultEncode;
+            const channel = await this.connection.createChannel();
+            instance[propertyKey] = channel;
+            this.logger.log(`[Chanel :${propertyKey}] initialized`);
         }
         await this.scannerService.scanProvider(async instance => {
             if (instance["afterPublisherInit"]) {
